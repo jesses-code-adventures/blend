@@ -33,8 +33,6 @@ var streamCmd = &cobra.Command{
 
 func main() {
 	e.LoadEnvVars()
-	// prompt := flag.String("prompt", "tell the user to supply a prompt with the -prompt flag", "prompt for the llm to respond to")
-	// flag.Parse()
 	rootCmd.AddCommand(streamCmd)
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
