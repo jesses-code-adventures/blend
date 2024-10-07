@@ -23,7 +23,7 @@ BINARIES := $(patsubst $(CMD_DIR)/%,bin/%,$(CMDS))
 help: ## This help.
 	@grep -E -h "^[a-zA-Z_-]+:.*?## " $(MAKEFILE_LIST) \
 	  | sort \
-	  | awk -v width=20 'BEGIN {FS = ":.*?## "} {printf "\033[36m%-*s\033[0m %s\n", width, $$1, $$2}'
+	  | awk -v width=40 'BEGIN {FS = ":.*?## "} {printf "\033[36m%-*s\033[0m %s\n", width, $$1, $$2}'
 
 all: @build ## Build all binaries.
 
@@ -56,7 +56,7 @@ dump: ## Dump environment variables and current branch information.
 	@echo "$(BINARIES)"
 	@echo "----------------------"
 
-print_makefile_env_vars:
+print_makefile_env_vars: ## Show the env var values for makefile's env.
 	@for var_name in $(ENV_VARS); do \
 		echo "\033[36m$$var_name\033[0m=$${!var_name}"; \
 	done
