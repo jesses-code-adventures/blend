@@ -1,13 +1,13 @@
-env_files := $(shell find . -type f \( -name "*.env" -o -name "*.env.public" -o -name "*.env.test" \))
+env_files := $(shell find . -type f \( -name "*.env.mine" -o -name "*.env.public" -o -name "*.env.test" \) | sort -r)
 
 ifneq ($(strip $(env_files)),)
     include $(env_files)
     export $(shell sed 's/=.*//' $(env_files))
 endif
 
+GO := "go"
+ENV_VARS := $(shell sed 's/=.*//' $(env_files) | sort -u)
 CURRENT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
-
-
 CMD_DIR := cmd
 CMDS := $(wildcard $(CMD_DIR)/*)
 BINARIES := $(patsubst $(CMD_DIR)/%,bin/%,$(CMDS))
@@ -38,9 +38,14 @@ clean: ## Clean up built binaries.
 	@rm -f bin/*
 
 dump: ## Dump environment variables and current branch information.
-	@echo "\033[32mEnvironment Variables\033[0m"
 	@echo "----------------------"
-	@$(MAKE) print_env_vars
+	@echo "\033[32m.env File Contents\033[0m"
+	@echo "----------------------"
+	@$(MAKE) print_env_var_files
+	@echo "----------------------"
+	@echo "\033[32mMakefile Env Values\033[0m"
+	@echo "----------------------"
+	@$(MAKE) print_makefile_env_vars
 	@echo "----------------------"
 	@echo "\033[32mBranch Data\033[0m"
 	@echo "----------------------"
@@ -49,9 +54,14 @@ dump: ## Dump environment variables and current branch information.
 	@echo "\033[32mBinary Targets\033[0m"
 	@echo "----------------------"
 	@echo "$(BINARIES)"
+	@echo "----------------------"
 
+print_makefile_env_vars:
+	@for var_name in $(ENV_VARS); do \
+		echo "\033[36m$$var_name\033[0m=$${!var_name}"; \
+	done
 
-print_env_vars: ## Print the environment variables stored in all env_files
+print_env_var_files: ## Print the environment variables stored in all env_files
 	@for file in $(env_files); do \
 		echo "\033[33m$$file\033[0m"; \
 		while IFS='=' read -r key value || [ -n "$$key" ]; do \
@@ -59,10 +69,16 @@ print_env_vars: ## Print the environment variables stored in all env_files
 				echo "\033[36m$$key\033[0m=$$value"; \
 			fi; \
 		done < $$file; \
-		echo ""; \
 	done
 
 test: ## Run all tests.
 	@$(GO) test ./...
+
+todos: ## dump todos and their file
+	paths to stdout (todos in test files ignored, see make todos-all)
+	find . -type f -name "*.*" -not -path "**/*_test.go" -not -path "**/.git/**" -not -path "**/.idea/**" -exec grep -iIH todo {} \; | column -t -s:
+
+todos-all: ## dump todos and their file paths to stdout
+	find . -type f -name "*.*" -not -path "**/.git/**" -not -path "**/.idea/**" -exec grep -iIH todo {} \; | column -t -s:
 
 reset: clean build ## Clean and build binaries.

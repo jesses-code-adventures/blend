@@ -1,3 +1,5 @@
-module github.com/jesses-code-adventures/branch_bot.png
+module github.com/jesses-code-adventures/branch_bot
 
 go 1.23.1
+
+require github.com/joho/godotenv v1.5.1
