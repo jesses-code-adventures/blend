@@ -1,5 +1,3 @@
-.PHONY: all build clean dump help print_env_var_files print_makefile_env_vars reset test vtest todos todos-all
-
 env_files := $(shell find . -type f \( -name "*.env.mine" -o -name "*.env.public" -o -name "*.env.test" \) | sort -r)
 
 ifneq ($(strip $(env_files)),)
@@ -7,12 +5,14 @@ ifneq ($(strip $(env_files)),)
     export $(shell sed 's/=.*//' $(env_files))
 endif
 
-BINARIES := $(patsubst $(CMD_DIR)/%,bin/%,$(CMDS))
 CMD_DIR := cmd
 CMDS := $(wildcard $(CMD_DIR)/*)
+BINARIES := $(patsubst $(CMD_DIR)/%,bin/%,$(CMDS))
 ENV_VARS := $(shell sed 's/=.*//' $(env_files) | sort -u)
 GO := "go"
 CURRENT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
+
+.PHONY: all build clean dump help print_env_var_files print_makefile_env_vars reset test vtest todos todos-all
 
 # HELP - will output the help for each task in the Makefile
 # In sorted order.
@@ -25,7 +25,7 @@ help: ## This help.
 	  | sort \
 	  | awk -v width=40 'BEGIN {FS = ":.*?## "} {printf "\033[36m%-*s\033[0m %s\n", width, $$1, $$2}'
 
-all: @build ## Build all binaries.
+all: build ## Build all binaries.
 
 $(BINARIES): bin/%: $(CMD_DIR)/%
 	@$(GO) build -o $@ ./$<
@@ -78,6 +78,9 @@ test: ## Run all tests.
 
 vtest: ## Run all tests with verbose output.
 	@$(GO) test ./... -v
+
+stream-test: ## Test run blend stream
+	@bin/blend stream "hello there - respond like an early 2000s rapper"
 
 todos: ## dump todos and their file
 	@find . -type f -name "*.*" -not -path "**/*_test.go" -not -path "**/.git/**" -not -path "**/.idea/**" -exec grep -iIH todo {} \; | column -t -s:
