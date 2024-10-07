@@ -1,3 +1,5 @@
+.PHONY: all build clean dump help print_env_var_files print_makefile_env_vars reset test vtest todos todos-all
+
 env_files := $(shell find . -type f \( -name "*.env.mine" -o -name "*.env.public" -o -name "*.env.test" \) | sort -r)
 
 ifneq ($(strip $(env_files)),)
@@ -5,14 +7,12 @@ ifneq ($(strip $(env_files)),)
     export $(shell sed 's/=.*//' $(env_files))
 endif
 
-GO := "go"
-ENV_VARS := $(shell sed 's/=.*//' $(env_files) | sort -u)
-CURRENT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
+BINARIES := $(patsubst $(CMD_DIR)/%,bin/%,$(CMDS))
 CMD_DIR := cmd
 CMDS := $(wildcard $(CMD_DIR)/*)
-BINARIES := $(patsubst $(CMD_DIR)/%,bin/%,$(CMDS))
-
-.PHONY: all build clean dump help
+ENV_VARS := $(shell sed 's/=.*//' $(env_files) | sort -u)
+GO := "go"
+CURRENT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
 
 # HELP - will output the help for each task in the Makefile
 # In sorted order.
@@ -71,6 +71,8 @@ print_env_var_files: ## Print the environment variables stored in all env_files
 		done < $$file; \
 	done
 
+reset: clean build ## Clean and build binaries.
+
 test: ## Run all tests.
 	@$(GO) test ./...
 
@@ -78,10 +80,7 @@ vtest: ## Run all tests with verbose output.
 	@$(GO) test ./... -v
 
 todos: ## dump todos and their file
-	paths to stdout (todos in test files ignored, see make todos-all)
-	find . -type f -name "*.*" -not -path "**/*_test.go" -not -path "**/.git/**" -not -path "**/.idea/**" -exec grep -iIH todo {} \; | column -t -s:
+	@find . -type f -name "*.*" -not -path "**/*_test.go" -not -path "**/.git/**" -not -path "**/.idea/**" -exec grep -iIH todo {} \; | column -t -s:
 
 todos-all: ## dump todos and their file paths to stdout
-	find . -type f -name "*.*" -not -path "**/.git/**" -not -path "**/.idea/**" -exec grep -iIH todo {} \; | column -t -s:
-
-reset: clean build ## Clean and build binaries.
+	@find . -type f -name "*.*" -not -path "**/.git/**" -not -path "**/.idea/**" -exec grep -iIH todo {} \; | column -t -s:
