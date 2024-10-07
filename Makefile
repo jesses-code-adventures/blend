@@ -1,9 +1,13 @@
-ifneq (,$(wildcard ./.env))
-    include .env
-    export $(shell sed 's/=.*//' .env)
+env_files := $(shell find . -type f \( -name "*.env" -o -name "*.env.public" -o -name "*.env.test" \))
+
+ifneq ($(strip $(env_files)),)
+    include $(env_files)
+    export $(shell sed 's/=.*//' $(env_files))
 endif
 
 CURRENT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
+
+
 CMD_DIR := cmd
 CMDS := $(wildcard $(CMD_DIR)/*)
 BINARIES := $(patsubst $(CMD_DIR)/%,bin/%,$(CMDS))
@@ -34,20 +38,29 @@ clean: ## Clean up built binaries.
 	@rm -f bin/*
 
 dump: ## Dump environment variables and current branch information.
-	@echo "Environment Variables"
+	@echo "\033[32mEnvironment Variables\033[0m"
 	@echo "----------------------"
-	@echo ""
-	@echo "----------------"
-	@echo "Test Variables:"
-	@echo "----------------"
-	@echo ""
-	@echo "Current Branch:"
-	@echo "---------------"
-	@echo "CURRENT_BRANCH: $(CURRENT_BRANCH)"
-	@echo ""
-	@echo "Binary Targets:"
-	@echo "---------------"
+	@$(MAKE) print_env_vars
+	@echo "----------------------"
+	@echo "\033[32mBranch Data\033[0m"
+	@echo "----------------------"
+	@echo "\033[36mCurrent Branch\033[0m $(CURRENT_BRANCH)"
+	@echo "----------------------"
+	@echo "\033[32mBinary Targets\033[0m"
+	@echo "----------------------"
 	@echo "$(BINARIES)"
+
+
+print_env_vars:
+	@for file in $(env_files); do \
+		echo "\033[33m$$file\033[0m"; \
+		while IFS='=' read -r key value || [ -n "$$key" ]; do \
+			if [ "$${key:0:1}" != "#" ] && [ -n "$$key" ]; then \
+				echo "\033[36m$$key\033[0m=$$value"; \
+			fi; \
+		done < $$file; \
+		echo ""; \
+	done
 
 test: ## Run all tests.
 	@$(GO) test ./...
