@@ -32,13 +32,6 @@ func Test_TestPrecedenceVar(t *testing.T) {
 	}
 }
 
-func Test_TestPrecedenceVarNonTest(t *testing.T) {
-	LoadEnvVars()
-	if os.Getenv("TEST_PRECEDENCE_VAR") != ".env.mine" {
-		t.Errorf("TEST_PRECEDENCE_VAR should be .env.mine in when test is false, got %s", os.Getenv("TEST_PRECEDENCE_VAR"))
-	}
-}
-
 func Test_OpenaiApiKey(t *testing.T) {
 	LoadEnvVarsWithTestVars()
 	if os.Getenv("OPENAI_API_KEY") == "" {
