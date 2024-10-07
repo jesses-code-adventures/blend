@@ -74,6 +74,9 @@ print_env_var_files: ## Print the environment variables stored in all env_files
 test: ## Run all tests.
 	@$(GO) test ./...
 
+vtest: ## Run all tests with verbose output.
+	@$(GO) test ./... -v
+
 todos: ## dump todos and their file
 	paths to stdout (todos in test files ignored, see make todos-all)
 	find . -type f -name "*.*" -not -path "**/*_test.go" -not -path "**/.git/**" -not -path "**/.idea/**" -exec grep -iIH todo {} \; | column -t -s:
