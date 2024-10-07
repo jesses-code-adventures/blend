@@ -14,7 +14,6 @@ func findProjectRoot() (string, error) {
 	if err != nil {
 		return "", err
 	}
-
 	for {
 		if _, err := os.Stat(filepath.Join(dir, "go.mod")); err == nil {
 			return dir, nil // found go.mod, this is the root
