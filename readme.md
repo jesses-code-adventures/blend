@@ -1,6 +1,6 @@
-![Tests](https://github.com/jesses-code-adventures/branch_bot/actions/workflows/test.yml/badge.svg)
+![Tests](https://github.com/jesses-code-adventures/blend/actions/workflows/test.yml/badge.svg)
 
-# branch bot
+# blend
 
 llm tool that ingests codesbases, applies diffs, runs the code.
 

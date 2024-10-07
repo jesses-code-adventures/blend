@@ -1,4 +1,4 @@
-module github.com/jesses-code-adventures/branch_bot
+module github.com/jesses-code-adventures/blend
 
 go 1.23.1
 

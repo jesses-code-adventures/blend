@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/jesses-code-adventures/branch_bot/env"
+	"github.com/jesses-code-adventures/blend/env"
 )
 
 func Test_UnixFilepathIngestor(t *testing.T) {
