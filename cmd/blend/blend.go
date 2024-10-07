@@ -16,6 +16,7 @@ var rootCmd = &cobra.Command{
 func main() {
 	e.LoadEnvVars()
 	rootCmd.AddCommand(streamCmd)
+	rootCmd.AddCommand(diffCmd)
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)

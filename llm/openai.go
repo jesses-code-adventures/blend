@@ -28,12 +28,12 @@ type OpenAi struct {
 	streaming    bool
 }
 
-func NewOpenAi(ctx context.Context, openaiApiKey string) (OpenAi, error) {
+func NewOpenAi(ctx context.Context, openaiApiKey string) (*OpenAi, error) {
 	if openaiApiKey == "" {
-		return OpenAi{}, NoApiKeyError{}
+		return &OpenAi{}, NoApiKeyError{}
 	}
 	client := openai.NewClient(option.WithAPIKey(openaiApiKey))
-	return OpenAi{
+	return &OpenAi{
 		client:       client,
 		ctx:          ctx,
 		systemPrompt: "",

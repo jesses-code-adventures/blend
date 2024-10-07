@@ -82,6 +82,9 @@ vtest: ## Run all tests with verbose output.
 stream-test: reset ## Test run blend stream
 	@bin/blend stream "hello there - respond like an early 2000s rapper"
 
+diff-test: reset ## Test run blend stream
+	@bin/blend diff "please fix the syntax error in my hello_world.bash"
+
 todos: ## dump todos and their file
 	@find . -type f -name "*.*" -not -path "**/*_test.go" -not -path "**/.git/**" -exec grep -iIH todo {} \; | column -t -s:
 
