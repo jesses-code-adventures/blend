@@ -9,6 +9,25 @@ import (
 	"github.com/joho/godotenv"
 )
 
+func findProjectRoot() (string, error) {
+	dir, err := os.Getwd()
+	if err != nil {
+		return "", err
+	}
+
+	for {
+		if _, err := os.Stat(filepath.Join(dir, "go.mod")); err == nil {
+			return dir, nil // found go.mod, this is the root
+		}
+		parent := filepath.Dir(dir)
+		if parent == dir {
+			break
+		}
+		dir = parent
+	}
+	return "", os.ErrNotExist
+}
+
 func globAndOverrideVars(pattern string) (matches []string) {
 	matches, err := filepath.Glob(pattern)
 	if err != nil {
@@ -29,7 +48,7 @@ func loadFromGlob(matches []string) {
 }
 
 func LoadEnvVars() {
-	workingDir, err := os.Getwd()
+	workingDir, err := findProjectRoot()
 	if err != nil {
 		panic(err)
 	}
@@ -40,7 +59,7 @@ func LoadEnvVars() {
 }
 
 func LoadEnvVarsWithTestVars() {
-	repoRoot, err := os.Getwd() // Change this to get the repository root
+	repoRoot, err := findProjectRoot()
 	if err != nil {
 		panic(err)
 	}
@@ -49,7 +68,6 @@ func LoadEnvVarsWithTestVars() {
 	matches = globAndOverrideVars(fmt.Sprintf("%s/*.env.mine", repoRoot))
 	loadFromGlob(matches)
 	testPath := fmt.Sprintf("%s/*.env.test", repoRoot)
-	// fmt.Print(testPath)
 	matches = globAndOverrideVars(testPath)
 	loadFromGlob(matches)
 }
