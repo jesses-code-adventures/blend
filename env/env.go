@@ -1,6 +1,7 @@
 package env
 
 import (
+	"fmt"
 	"log"
 	"path/filepath"
 
@@ -17,14 +18,15 @@ func globAndOverrideVars(pattern string) {
 		if err != nil {
 			log.Fatalf("Error loading %s file: %v", match, err)
 		}
+		fmt.Sprintf("loaded %s", match)
 	}
 	return
 }
 
 func LoadEnvVars(test bool) {
-	globAndOverrideVars("./../*.env.public")
-	globAndOverrideVars("./../*.env.mine")
+	globAndOverrideVars("../*.env.public")
+	globAndOverrideVars("../*.env.mine")
 	if test {
-		globAndOverrideVars("./../*.env.test")
+		globAndOverrideVars("../*.env.test")
 	}
 }
