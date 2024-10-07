@@ -41,35 +41,15 @@ func NewOpenAi(ctx context.Context, openaiApiKey string) (OpenAi, error) {
 	}, nil
 }
 
-func (o *OpenAi) StreamPrint(prompt string) {
-	r, err := o.StreamTokens(prompt)
-	// TODO: Handle AlreadyStreamingError differently
-	if err != nil {
-		panic(err)
-	}
-	defer r.Close()
-	buf := make([]byte, 1024)
-	for {
-		n, err := r.Read(buf)
-		if err != nil {
-			if err == io.EOF {
-				break
-			}
-			panic(err)
-		}
-		fmt.Print(string(buf[:n]))
-	}
+func (o *OpenAi) StopStreaming() {
+	o.streaming = false
 }
 
 func (o *OpenAi) SetSystemPrompt(prompt string) {
 	o.systemPrompt = prompt
 }
 
-func (o *OpenAi) StopStreaming() {
-	o.streaming = false
-}
-
-func (o *OpenAi) StreamTokens(prompt string) (pr io.ReadCloser, err error) {
+func (o OpenAi) StreamTokens(prompt string) (pr io.ReadCloser, err error) {
 	if o.streaming {
 		return pr, AlreadyStreamingError{}
 	}
@@ -107,4 +87,24 @@ func (o *OpenAi) StreamTokens(prompt string) (pr io.ReadCloser, err error) {
 		}
 	}()
 	return pr, nil
+}
+
+func (o OpenAi) StreamPrint(prompt string) {
+	r, err := o.StreamTokens(prompt)
+	// TODO: Handle AlreadyStreamingError differently
+	if err != nil {
+		panic(err)
+	}
+	defer r.Close()
+	buf := make([]byte, 1024)
+	for {
+		n, err := r.Read(buf)
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+			panic(err)
+		}
+		fmt.Print(string(buf[:n]))
+	}
 }
