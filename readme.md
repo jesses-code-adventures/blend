@@ -8,7 +8,9 @@ llm tool that ingests codesbases, applies diffs, runs the code.
 
 ![Design](docs/design.png)
 
-## environment vars
+## dev
+
+### environment vars
 
 inside the go environment, env var files are loaded in the order of .env.public, then .env.mine with override behaviour, so you can clone the repo and use the .env.public variables for local dev and customize them in .env.mine
 
