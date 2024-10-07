@@ -10,7 +10,7 @@ import (
 )
 
 func Test_UnixFilepathIngestor(t *testing.T) {
-	env.LoadEnvVars(true)
+	env.LoadEnvVarsWithTestVars()
 	testDataDir := os.Getenv("TEST_DATA_DIR")
 	dir := fmt.Sprintf("../%s/sf_bash_in", testDataDir)
 	i := UnixFilepathIngestorFromRoot(dir)
