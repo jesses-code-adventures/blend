@@ -49,27 +49,7 @@ dump: ## Dump environment variables and current branch information.
 	@echo "---------------"
 	@echo "$(BINARIES)"
 
-dev: ## Serve the application in development mode with live reload.
-	@air cmd/serve/serve.go | humanlog
-
-dev-reset: reset dev ## Reset the db, clean binaries, run codegen and run the command in .air.toml with live reload.
-
-dev-test: ## Serve the test application in development mode with live reload.
-	@air cmd/serve_test/serve.go | humanlog
-
 test: ## Run all tests.
 	@$(GO) test ./...
 
-reset: db-reset clean gen ## Clean, reset the database, generate code, and build binaries.
-
-serve: clean build ## Clean, build, and serve the application.
-	@./bin/serve
-
-hserve: clean build ## Clean, build, and serve the application with human-readable logs.
-	@./bin/serve | humanlog
-
-serve-test: clean build ## Clean, build, and serve the test application.
-	@./bin/serve_test
-
-hserve-test: clean build ## Clean, build, and serve the test application with human##readable logs.
-	@./bin/serve_test | humanlog
+reset: clean build ## Clean and build binaries.
