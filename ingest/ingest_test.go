@@ -5,14 +5,12 @@ import (
 	"os"
 	"strings"
 	"testing"
+
+	"github.com/jesses-code-adventures/branch_bot/env"
 )
 
-type TestIngestor struct {
-	rootInputs  string
-	rootOutputs string
-}
-
 func Test_UnixFilepathIngestor(t *testing.T) {
+	env.LoadEnvVars(true)
 	testDataDir := os.Getenv("TEST_DATA_DIR")
 	dir := fmt.Sprintf("../%s/sf_bash_in", testDataDir)
 	i := UnixFilepathIngestorFromRoot(dir)
