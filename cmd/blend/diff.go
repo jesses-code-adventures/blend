@@ -15,7 +15,12 @@ var diffCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		prompt := args[0]
 		ctx := context.Background()
-		runner := r.NewUnixChatGptRunner(ctx)
+		staticSystemPrompt := `You are a developer tool for generating code.
+You should respond in a specific format to every request. Every response should be in the form of a list of codeblocks.
+Each set of codeblocks should be labelled after the first three backticks with the corresponding file path provided in later in the prompt.
+You should only provide with codeblocks where you suggest diffs. If you have no diffs to suggest, you should return an empty set of backticks.
+`
+		runner := r.NewUnixChatGptRunner(ctx, staticSystemPrompt)
 		reader, err := runner.RefreshRun(prompt)
 		if err != nil {
 			panic(err)
