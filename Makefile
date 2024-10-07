@@ -79,11 +79,11 @@ test: ## Run all tests.
 vtest: ## Run all tests with verbose output.
 	@$(GO) test ./... -v
 
-stream-test: ## Test run blend stream
+stream-test: reset ## Test run blend stream
 	@bin/blend stream "hello there - respond like an early 2000s rapper"
 
 todos: ## dump todos and their file
-	@find . -type f -name "*.*" -not -path "**/*_test.go" -not -path "**/.git/**" -not -path "**/.idea/**" -exec grep -iIH todo {} \; | column -t -s:
+	@find . -type f -name "*.*" -not -path "**/*_test.go" -not -path "**/.git/**" -exec grep -iIH todo {} \; | column -t -s:
 
 todos-all: ## dump todos and their file paths to stdout
 	@find . -type f -name "*.*" -not -path "**/.git/**" -not -path "**/.idea/**" -exec grep -iIH todo {} \; | column -t -s:
