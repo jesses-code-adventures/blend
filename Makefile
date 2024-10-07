@@ -51,7 +51,7 @@ dump: ## Dump environment variables and current branch information.
 	@echo "$(BINARIES)"
 
 
-print_env_vars:
+print_env_vars: ## Print the environment variables stored in all env_files
 	@for file in $(env_files); do \
 		echo "\033[33m$$file\033[0m"; \
 		while IFS='=' read -r key value || [ -n "$$key" ]; do \
