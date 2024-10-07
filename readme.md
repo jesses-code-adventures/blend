@@ -1,3 +1,5 @@
+![Tests](https://github.com/jesses-code-adventures/branch_bot/actions/workflows/test.yml/badge.svg)
+
 # branch bot
 
 llm tool that ingests codesbases, applies diffs, runs the code.
