@@ -41,7 +41,6 @@ func loadFromGlob(matches []string) {
 		if err != nil {
 			log.Fatalf("Error loading %s file: %v", match, err)
 		}
-		fmt.Sprintf("loaded %s", match)
 	}
 	return
 }

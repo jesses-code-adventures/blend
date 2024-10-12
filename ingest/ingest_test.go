@@ -18,7 +18,7 @@ func Test_UnixFilepathIngestor(t *testing.T) {
 	if len(i.Locations()) == 0 {
 		t.Errorf("No test files in %s", dir)
 	}
-	for f, _ := range i.Locations() {
+	for f := range i.Locations() {
 		if !strings.Contains(f, "hello_world") {
 			t.Errorf("expected string containing, got %s", f)
 		}
