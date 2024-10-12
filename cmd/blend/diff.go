@@ -2,8 +2,9 @@ package main
 
 import (
 	"context"
-	"io"
+	"fmt"
 
+	p "github.com/jesses-code-adventures/blend/parser"
 	r "github.com/jesses-code-adventures/blend/runner"
 	"github.com/spf13/cobra"
 )
@@ -26,16 +27,8 @@ You should only provide with codeblocks where you suggest diffs. If you have no 
 			panic(err)
 		}
 		defer reader.Close()
-		buf := make([]byte, 1024)
-		for {
-			n, err := reader.Read(buf)
-			if err != nil {
-				if err == io.EOF {
-					break
-				}
-				panic(err)
-			}
-			print(string(buf[:n]))
-		}
+		parser := p.NewParser()
+		parser.Parse(reader)
+		fmt.Print(parser.ParsedFilesAsString())
 	},
 }
