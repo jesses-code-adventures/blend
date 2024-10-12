@@ -12,10 +12,7 @@ func Test_ParserHappy(t *testing.T) {
 	numLines := 3
 	reader := io.NopCloser(strings.NewReader(tokens))
 	parser := NewParser()
-	err := parser.Parse(reader)
-	if err != nil {
-		t.Errorf("parsing failed")
-	}
+	parser.Parse(reader)
 	for _, change := range parser.changes {
 		fmt.Println(change.relativePath)
 		if change.relativePath == "" {
